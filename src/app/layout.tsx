@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
+import { Flowbite, Spinner } from "flowbite-react";
 
 const inter = Inter({ subsets: ["latin"] });
 const montserrat = Montserrat({ subsets: ['latin'] });
@@ -20,7 +21,9 @@ export default function RootLayout({
       <head>
       </head>
       <body className={montserrat.className}>
-        {children}
+        <Flowbite theme={{mode: 'dark'}}>
+          {children}
+        </Flowbite>
       </body>
     </html>
   );
