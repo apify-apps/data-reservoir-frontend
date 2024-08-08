@@ -1,34 +1,28 @@
+import React from 'react'
 import BasicTable from '@/components/common/basic-table/BasicTable';
 import Loading from '@/components/common/loading/Loading';
 import Paper from '@/components/common/paper/Paper'
 import { API_ROUTE } from '@/constant/api-route';
-import { TheSimsCastawayProductResponse } from '@/model/response/the-sims';
+import { TheSimsFourPCHarvestableResponse } from '@/model/response/the-sims';
 import { request } from '@/utilities/http';
 // import { multiSelectFilter } from '@/utilities/table';
 import { useQuery } from '@tanstack/react-query';
-import { createColumnHelper, flexRender, getCoreRowModel, getFilteredRowModel, useReactTable } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 import { Checkbox } from 'flowbite-react';
-import React, { useMemo, useState } from 'react'
 
-interface ColumnFilter {
-  id: string,
-  value: string
-}
-type ColumnFilterState = ColumnFilter[];
-
-export default function CastawayProductNew() {
+export default function FourPCHarvestable() {
   const { isLoading, data } = useQuery({
-    queryKey: ["the-sims-castaway-product"],
+    queryKey: ["the-sims-four-pc-harvestable"],
     queryFn: async () => {
-      let j = await request<TheSimsCastawayProductResponse[], {}>({
+      let j = await request<TheSimsFourPCHarvestableResponse[], {}>({
         method: "GET",
-        url: API_ROUTE.THE_SIMS.CASTAWAY_PRODUCT,
+        url: API_ROUTE.THE_SIMS.FOUR_PC_HARVESTABLE,
       });
-      return (j?.data?.slice(0, 50) ?? []);
+      return (j?.data ?? []);
     }
   });
 
-  const colHelper = createColumnHelper<TheSimsCastawayProductResponse>();
+  const colHelper = createColumnHelper<TheSimsFourPCHarvestableResponse>();
   const columns = [
     colHelper.display({
       id: 'index',
@@ -48,46 +42,29 @@ export default function CastawayProductNew() {
       cell: p => p.getValue(),
       header: "Name"
     }),
-    colHelper.accessor('category', {
+    colHelper.accessor('form', {
       cell: p => p.getValue(),
-      header: "Category",
-      filterFn: (a, b, c: string[]) => {
-        return c.length === 0 || c.includes(b);
-      },
-      enableColumnFilter: true,
+      header: "Form",
+      filterFn: 'arrIncludesSome',
       meta: {
         enableSorting: true,
         filterVariant: 'select'
       }
     }),
-    colHelper.accessor('bladder', {
-      cell: p => p.getValue(),
-      header: "Bladder",
+    colHelper.display({
+      cell: p => `${p.row.original.baseValue} - ${p.row.original.perfectValue}`,
+      header: "Base - Perfect Value",
       meta: {
         enableSorting: true
       }
     }),
-    colHelper.accessor('energy', {
-      cell: p => p.getValue(),
-      header: "Energy",
-      meta: {
-        enableSorting: true
-      }
-    }),
-    colHelper.accessor('hunger', {
-      cell: p => p.getValue(),
-      header: "Hunger",
-      meta: {
-        enableSorting: true
-      }
-    }),
-    colHelper.accessor('eatenRaw', {
+    colHelper.accessor('verticalGarden', {
       cell: p => (
         <div className='flex justify-center'>
           <Checkbox className='w-5 h-5' color='gray' disabled checked={p.getValue()}/>
         </div>
       ),
-      header: "Eaten Raw",
+      header: "Vertical Garden",
       meta: {
         enableSorting: true
       }
@@ -102,10 +79,9 @@ export default function CastawayProductNew() {
 
   if (isLoading || !data) return (<Loading />);
   return (
-    <Paper className='max-h-[800px] overflow-auto'>
+    <Paper className='max-h-[800px] overflow-auto rounded-md'>
       <div className='p-5 inline-block'>
         <BasicTable data={data} columns={columns}/>
-
       </div>
     </Paper>
   )

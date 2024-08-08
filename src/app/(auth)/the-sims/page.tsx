@@ -1,7 +1,8 @@
 'use client'
 
+import BustinOutCareer from "@/components/app/the-sims/BustinOutCareer";
 import CastawayProduct from "@/components/app/the-sims/CastawayProduct";
-import CastawayProductNew from "@/components/app/the-sims/CastawayProductNew";
+import FourPCHarvestable from "@/components/app/the-sims/FourPCHarvestable";
 import Loading from "@/components/common/loading/Loading";
 import Paper from "@/components/common/paper/Paper";
 import Picker from "@/components/common/picker/Picker";
@@ -72,7 +73,9 @@ export default function TheSimsPage() {
         {/* Layer 2 : Table dan Treemap */}
         <div className='min-h-[100vh]'>
           {/* { state.pickedTable === "the_sims_castaway_product" && <CastawayProduct/> } */}
-          { state.pickedTable === "the_sims_castaway_product" && <CastawayProductNew/> }
+          { state.pickedTable === "the_sims_castaway_product" && <CastawayProduct/> }
+          { state.pickedTable === "the_sims_four_pc_harvestable" && <FourPCHarvestable/> }
+          { state.pickedTable === "the_sims_bustin_out_career" && <BustinOutCareer/> }
         </div>
       </div>
     )
