@@ -1,17 +1,15 @@
 'use client'
 
-import { DashboardResponse, DashboardTableResponse } from '@/model/response/dashboard';
+import { DashboardResponse } from '@/model/response/dashboard';
 import { useQuery } from '@tanstack/react-query'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import _ from 'lodash';
 import classNames from 'classnames'
 import { produce } from 'immer';
-import { Table } from 'flowbite-react'; 
 import Paper from '@/components/common/paper/Paper';
-import { Chart } from 'chart.js';
-import {TreemapController, TreemapElement} from 'chartjs-chart-treemap';
-import * as d3 from 'd3'
 import ComingSoon from '@/components/common/coming-soon/ComingSoon';
+import TableBarChart from '@/components/app/dashboard/TableBarChart';
+import { getCategoryColorClass } from '@/app/utilities/color';
 
 interface DashboardPageState {
   pickedCategories: string[]
@@ -89,7 +87,7 @@ export default function DashboardPage() {
                 <tbody>
                   {
                     categorySummary.map((el, idx) => (
-                      <tr className='border-gray-700 border-b hover:bg-slate-700' key={idx}>
+                      <tr className={classNames('border-gray-700 border-b category-table', getCategoryColorClass(el.category))} key={idx}>
                         <td className='px-2 py-2 text-center font-bold'>{idx + 1}</td>
                         <td className='px-2 py-2 '>{el.category}</td>
                         <td className='px-2 py-2 '>{el.rowCount}</td>
@@ -116,7 +114,8 @@ export default function DashboardPage() {
           </div>
           <div>
             <Paper className='h-full p-4'>
-              <ComingSoon message='Bar Chart (Records per Table)'/>
+              <TableBarChart data={cleanData.flatMap(x => x.tables.flatMap(y => ({...y, category: x.category})))}/>
+              {/* <ComingSoon message='Bar Chart (Records per Table)'/> */}
             </Paper>
           </div>
         </div>

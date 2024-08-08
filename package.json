@@ -10,16 +10,13 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.1.2",
-    "@mantine/core": "^7.11.2",
-    "@mantine/hooks": "^7.11.2",
     "@tanstack/react-query": "^5.51.18",
     "@tanstack/react-table": "^8.19.3",
     "@types/lodash": "^4.17.7",
-    "chart.js": "^4.4.3",
-    "chartjs-chart-treemap": "^2.3.1",
     "classnames": "^2.5.1",
-    "d3": "^7.9.0",
     "drizzle-orm": "^0.32.1",
+    "echarts": "^5.5.1",
+    "echarts-for-react": "^3.0.2",
     "flowbite-react": "^0.10.1",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
@@ -34,7 +31,6 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
-    "@types/d3": "^7.4.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
