@@ -13,7 +13,6 @@ export default function TableTreeMap(props : TableTreeMapProps) {
     series: [
       {
         // data: props.data.map(x => x.rowCount),
-        roam: 'scale',
         nodeClick: false,
         scaleLimit: {
           min: 1.2,

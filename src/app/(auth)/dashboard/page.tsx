@@ -11,6 +11,7 @@ import ComingSoon from '@/components/common/coming-soon/ComingSoon';
 import TableBarChart from '@/components/app/dashboard/TableBarChart';
 import { getCategoryColorClass } from '@/app/utilities/color';
 import TableTreeMap from '@/components/app/dashboard/TableTreeMap';
+import Loading from '@/components/common/loading/Loading';
 
 interface DashboardPageState {
   pickedCategories: string[]
@@ -30,7 +31,7 @@ export default function DashboardPage() {
     }
   });
 
-  if (isLoading || !data) return (<p className='text-white'>Loading...</p>)
+  if (isLoading || !data) return (<Loading/>)
   else {
 
     let cleanData = data.filter(x => state.pickedCategories.length === 0 || state.pickedCategories.includes(x.category));
