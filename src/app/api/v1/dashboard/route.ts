@@ -1,10 +1,13 @@
 import { DB } from "@/database/client";
 import { DashboardResponse } from "@/model/response/dashboard";
+import { appendBase } from "@/utilities/api";
 import { sql } from "drizzle-orm";
 import _ from "lodash";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  let category = searchParams.get('category') ?? "";
   let result = (
     await DB.execute<{
       category: string,
@@ -13,28 +16,30 @@ export async function GET() {
       rowCount: number
     }>(sql`
       SELECT
-          m.name AS "category",
-          m.owner,
-          tc.name AS "tableName",
-          tc.row_count AS "rowCount"
+        m.name AS "category",
+        m.owner,
+        tc.name AS "tableName",
+        tc.row_count AS "rowCount"
       FROM (
-          SELECT
-              "table_name" AS "name", 
-              (xpath('/row/cnt/text()', xml_count))[1]::text::int AS row_count
-          FROM (
-          SELECT 
-              "table_name",
-              table_schema, 
-              QUERY_TO_XML(FORMAT('select count(*) as cnt from %I.%I', table_schema, table_name), false, true, '') AS xml_count
-          FROM information_schema.tables
-          WHERE table_schema = 'public' --<< change here for the schema you want
-          ) t
+        SELECT
+          "table_name" AS "name", 
+          (xpath('/row/cnt/text()', xml_count))[1]::text::int AS row_count
+        FROM (
+        SELECT 
+          "table_name",
+          table_schema, 
+          QUERY_TO_XML(FORMAT('select count(*) as cnt from %I.%I', table_schema, table_name), false, true, '') AS xml_count
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
+        ) t
       ) tc
       JOIN master_table_category m
-          ON STRPOS(tc.name, m.prefix) > 0
+        ON STRPOS(tc.name, m.prefix) > 0
+        AND (${category ?? ""} = '' OR ${category ?? ""} = m.prefix OR ${category ?? ""} = m.name)
     `)
   );
 
+  console.log("aaa")
   // Grup jadi per kategori
   let conv = _.chain(result)
     .groupBy(x => x.category)
@@ -44,6 +49,5 @@ export async function GET() {
       tables: value.map(v => ({ rowCount: v.rowCount, tableName: v.tableName }))
     } as DashboardResponse))
     .toArray();
-
-  return NextResponse.json(conv);
+  return NextResponse.json(appendBase(conv.value()));
 }
