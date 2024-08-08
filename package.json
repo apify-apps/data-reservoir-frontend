@@ -9,11 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.2",
     "@mantine/core": "^7.11.2",
     "@mantine/hooks": "^7.11.2",
     "@tanstack/react-query": "^5.51.18",
     "@tanstack/react-table": "^8.19.3",
     "@types/lodash": "^4.17.7",
+    "chart.js": "^4.4.3",
+    "chartjs-chart-treemap": "^2.3.1",
+    "classnames": "^2.5.1",
+    "d3": "^7.9.0",
     "drizzle-orm": "^0.32.1",
     "flowbite-react": "^0.10.1",
     "immer": "^10.1.1",
@@ -22,11 +27,14 @@
     "postgres": "^3.4.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-icons": "^5.2.1",
     "sequelize": "^6.37.3",
+    "tailwind-scrollbar": "^3.1.0",
     "tedious": "^18.3.0",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@types/d3": "^7.4.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

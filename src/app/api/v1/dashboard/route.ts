@@ -1,13 +1,16 @@
 import { DB } from "@/database/client";
+import { DashboardResponse } from "@/model/response/dashboard";
 import { sql } from "drizzle-orm";
+import _ from "lodash";
+import { NextResponse } from "next/server";
 
 export async function GET() {
-  return Response.json(
+  let result = (
     await DB.execute<{
       category: string,
       owner: string,
       tableName: string,
-      rowCount: string
+      rowCount: number
     }>(sql`
       SELECT
           m.name AS "category",
@@ -31,4 +34,16 @@ export async function GET() {
           ON STRPOS(tc.name, m.prefix) > 0
     `)
   );
+
+  // Grup jadi per kategori
+  let conv = _.chain(result)
+    .groupBy(x => x.category)
+    .map((value, key) => ({
+      category: key,
+      owner: value[0].owner,
+      tables: value.map(v => ({ rowCount: v.rowCount, tableName: v.tableName }))
+    } as DashboardResponse))
+    .toArray();
+
+  return NextResponse.json(conv);
 }
