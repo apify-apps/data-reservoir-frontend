@@ -4,6 +4,7 @@ import Paper from '@/components/common/paper/Paper'
 import { API_ROUTE } from '@/constant/api-route';
 import { TheSimsCastawayProductResponse } from '@/model/response/the-sims';
 import { request } from '@/utilities/http';
+// import { multiSelectFilter } from '@/utilities/table';
 import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper, flexRender, getCoreRowModel, getFilteredRowModel, useReactTable } from '@tanstack/react-table';
 import { Checkbox } from 'flowbite-react';
@@ -23,7 +24,7 @@ export default function CastawayProductNew() {
         method: "GET",
         url: API_ROUTE.THE_SIMS.CASTAWAY_PRODUCT,
       });
-      return (j?.data ?? []);
+      return (j?.data?.slice(0, 50) ?? []);
     }
   });
 
@@ -50,6 +51,10 @@ export default function CastawayProductNew() {
     colHelper.accessor('category', {
       cell: p => p.getValue(),
       header: "Category",
+      filterFn: (a, b, c: string[]) => {
+        return c.length === 0 || c.includes(b);
+      },
+      enableColumnFilter: true,
       meta: {
         enableSorting: true,
         filterVariant: 'select'
