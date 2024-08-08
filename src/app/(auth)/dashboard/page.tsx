@@ -10,6 +10,7 @@ import Paper from '@/components/common/paper/Paper';
 import ComingSoon from '@/components/common/coming-soon/ComingSoon';
 import TableBarChart from '@/components/app/dashboard/TableBarChart';
 import { getCategoryColorClass } from '@/app/utilities/color';
+import TableTreeMap from '@/components/app/dashboard/TableTreeMap';
 
 interface DashboardPageState {
   pickedCategories: string[]
@@ -100,7 +101,8 @@ export default function DashboardPage() {
           </div>
           <div>
             <Paper className='h-full p-4'>
-              <ComingSoon message='Tree Map'/>
+              {/* <ComingSoon message='Tree Map'/> */}
+              <TableTreeMap data={data}/>
             </Paper>
           </div>
         </div>
@@ -123,12 +125,6 @@ export default function DashboardPage() {
       </div>
     )
   }
-}
-
-function TreeMapChart(props: {
-  data: DashboardResponse[]
-}) {
-  return (<></>)
 }
 
 function CategoryPicker(props: {
