@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactECharts from 'echarts-for-react';
 import { EChartsOption } from 'echarts';
-import { getCategoryColorHex } from '@/app/utilities/color';
+import { getCategoryColorHex } from '@/utilities/color';
 
 export interface TableBarChartProps{
   data: {

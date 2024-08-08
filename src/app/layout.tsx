@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
+import "./post.css";
 import { Flowbite, Spinner } from "flowbite-react";
 
 const inter = Inter({ subsets: ["latin"] });

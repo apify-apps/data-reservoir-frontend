@@ -9,25 +9,31 @@ import { produce } from 'immer';
 import Paper from '@/components/common/paper/Paper';
 import ComingSoon from '@/components/common/coming-soon/ComingSoon';
 import TableBarChart from '@/components/app/dashboard/TableBarChart';
-import { getCategoryColorClass } from '@/app/utilities/color';
+import { getCategoryColorClass } from '@/utilities/color';
 import TableTreeMap from '@/components/app/dashboard/TableTreeMap';
 import Loading from '@/components/common/loading/Loading';
+import { BaseResponse } from '@/model/response/base';
+import { API_ROUTE } from '@/constant/api-route';
+import Picker from '@/components/common/picker/Picker';
+import { request } from '@/utilities/http';
 
 interface DashboardPageState {
   pickedCategories: string[]
 }
 
 export default function DashboardPage() {
-
   const [state, setState] = useState<DashboardPageState>({
     pickedCategories: []
   });
 
   let { isLoading, data } = useQuery({
-    queryKey: [""],
+    queryKey: ["the-sims-summary"],
     queryFn: async () => {
-      let j = await (await fetch("/api/v1/dashboard")).json();
-      return j as DashboardResponse[]
+      let j = await request<DashboardResponse[], {}>({
+        method: "GET",
+        url: API_ROUTE.DASHBOARD,
+      });
+      return j.data
     }
   });
 
@@ -58,7 +64,7 @@ export default function DashboardPage() {
         {/* Layer 1 : Angka2 dan filter */}
         <div className='grid grid-cols-5 gap-4 max-lg:grid-cols-3 max-lg:grid-rows-2'>
           <Paper className='px-4 col-span-2 p-4 text-xs max-lg:col-span-3'>
-            <CategoryPicker categories={categories} onClickCategory={onClickCategory} pickedCategories={state.pickedCategories}/>
+            <Picker options={categories} onClickCategory={onClickCategory} singleOption={false} selected={state.pickedCategories}/>
           </Paper>
           <Paper className='px-6'>
             <p className='xl:text-xl lg:text-lg max-lg:text-xl max-sm:text-sm'>Categories</p>
@@ -126,27 +132,4 @@ export default function DashboardPage() {
       </div>
     )
   }
-}
-
-function CategoryPicker(props: {
-  categories: string[],
-  pickedCategories: string[]
-  onClickCategory: (category: string, enabled: boolean) => void
-}) {
-  return (
-    <div className='grid grid-cols-3 gap-y-4 gap-x-1'>
-      {
-        props.categories.map(c => (
-          <div className={classNames('p-2 rounded-sm hover:bg-slate-800 border-gray-600 border-2 cursor-pointer', {
-            'bg-slate-700 hover:bg-slate-500': props.pickedCategories.includes(c)
-          })}
-            key={c}
-            onClick={() => props.onClickCategory(c, !props.pickedCategories.includes(c))}
-          >
-            {c}
-          </div>
-        ))
-      }
-    </div>
-  )
 }
