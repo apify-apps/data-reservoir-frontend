@@ -39,8 +39,6 @@ export async function GET(request: NextRequest) {
     `)
   );
 
-  console.log("aaa")
-  // Grup jadi per kategori
   let conv = _.chain(result)
     .groupBy(x => x.category)
     .map((value, key) => ({

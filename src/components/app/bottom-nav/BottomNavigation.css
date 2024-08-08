@@ -1,3 +1,7 @@
 .inactive {
-    @apply bg-bluish/50 text-white/10 disabled:hover:bg-bluish/35 disabled:hover:text-white/35
+    @apply bg-bluish/50 text-white/10 disabled:hover:bg-bluish/35 disabled:hover:text-white/35;
+
+    & path {
+        @apply fill-white/10 disabled:hover:fill-white/35;
+    }
 }
