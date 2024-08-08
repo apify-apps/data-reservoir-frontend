@@ -37,7 +37,7 @@ export default function DashboardPage() {
     let cleanData = data.filter(x => state.pickedCategories.length === 0 || state.pickedCategories.includes(x.category));
     let categories = data.map(x => x.category);
     let totalCategory = new Set(cleanData.map(x => x.category)).size;
-    let totalTable = cleanData.length;
+    let totalTable = cleanData.flatMap(x => x.tables).length;
     let totalData = cleanData.flatMap(x => x.tables).reduce((prev, current) => prev + current.rowCount, 0);
     let categorySummary = cleanData.map(x => ({
       category: x.category,
@@ -75,9 +75,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Layer 2 : Table dan Treemap */}
-        <div className='grid grid-cols-2 gap-4 max-md:grid-rows-2 max-md:grid-cols-1'>
+        <div className='grid grid-cols-2 grid-rows-1 gap-4 max-md:grid-rows-2 max-md:grid-cols-1 min-h-80'>
           <div className='overflow-y-auto overflow-x-hidden rounded-md'>
-            <Paper className='p-4 h-80 !justify-start'>
+            <Paper className='p-4 !justify-start'>
               <table>
                 <thead className='text-md border-b-2 border-gray-700'>
                   <tr>
@@ -100,12 +100,27 @@ export default function DashboardPage() {
               </table>
             </Paper>
           </div>
-          <div className='row-span-4 h-80 max-md:h-60'>
-            <Paper className='h-full'>
+          <div>
+            <Paper className='h-full p-4'>
               <ComingSoon message='Tree Map'/>
             </Paper>
           </div>
         </div>
+
+        {/* Layer 3 : Pie Chart + Bar Chart */}
+        <div className='grid grid-cols-2 grid-rows-1 gap-4 max-md:grid-rows-2 max-md:grid-cols-1 min-h-80'>
+          <div className='overflow-y-auto overflow-x-hidden rounded-md'>
+            <Paper className='h-full p-4'>
+              <ComingSoon message='Pie Chart (Category Record)'/>
+            </Paper>
+          </div>
+          <div>
+            <Paper className='h-full p-4'>
+              <ComingSoon message='Bar Chart (Records per Table)'/>
+            </Paper>
+          </div>
+        </div>
+
       </div>
     )
   }

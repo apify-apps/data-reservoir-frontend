@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import React from 'react'
 import { BiSolidHome } from 'react-icons/bi'
@@ -5,17 +7,26 @@ import { FaPizzaSlice, FaPowerOff, FaBowlFood } from "react-icons/fa6";
 import { BsFillSuitDiamondFill } from "react-icons/bs";
 import { CiWheat } from "react-icons/ci";
 import { PiFarm } from "react-icons/pi";
+import { usePathname } from 'next/navigation';
+import { IoIosDocument } from "react-icons/io";
+import classNames from 'classnames';
 
 
 export default function BottomNavigation() {
+  const path = usePathname();
+
   return (
     <div className='fixed bottom-0 left-0 bg-bluish-200 text-white py-4 w-full m-auto'>
       <div className='flex gap-5 w-full overflow-x-scroll overflow-y-hidden px-5 scrollbar-none'>
-        <Link title='Home' className='h-full m-auto p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-2xl flex justify-center items-center hover:text-white/35' href='#'>
+        <Link title='Home' className={classNames('h-full m-auto p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-2xl flex justify-center items-center hover:text-white/35', {
+          'bg-slate-400 border-slate-500 border-4': path === "/dashboard"
+        })} href='/dashboard'>
           <BiSolidHome/>
         </Link>
         {/* https://sustainability.transjakarta.co.id/ */}
-        <Link title='Transjakarta' className='group m-auto h-full p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-3xl flex justify-center items-center hover:text-white/35' href='#'>
+        <Link title='Transjakarta' className={classNames('group m-auto h-full p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-3xl flex justify-center items-center hover:text-white/35', {
+          'bg-slate-400 border-slate-500 border-4': path === "/transjakarta"
+        })} href='/transjakarta'>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 61 65" fill="none">
             <path
               className='fill-white group-hover:fill-white/35'
@@ -36,6 +47,11 @@ export default function BottomNavigation() {
         </Link>
         <Link title='Nasi goreng' className='m-auto h-full p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-2xl flex justify-center items-center hover:text-white/35' href='#'>
           <FaBowlFood />
+        </Link>
+        <Link title='Home' className={classNames('h-full m-auto p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-2xl flex justify-center items-center hover:text-white/35', {
+          'bg-slate-400 border-slate-500 border-4': path === "/docs"
+        })} href='/docs'>
+          <IoIosDocument/>
         </Link>
         <Link title='Logout' className='m-auto h-full p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-2xl flex justify-center items-center hover:text-white/35' href='#'>
           <FaPowerOff />
