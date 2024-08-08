@@ -1,6 +1,7 @@
 'use client'
 
 import CastawayProduct from "@/components/app/the-sims/CastawayProduct";
+import CastawayProductNew from "@/components/app/the-sims/CastawayProductNew";
 import Loading from "@/components/common/loading/Loading";
 import Paper from "@/components/common/paper/Paper";
 import Picker from "@/components/common/picker/Picker";
@@ -70,7 +71,8 @@ export default function TheSimsPage() {
 
         {/* Layer 2 : Table dan Treemap */}
         <div className='min-h-[100vh]'>
-          { state.pickedTable === "the_sims_castaway_product" && <CastawayProduct/> }
+          {/* { state.pickedTable === "the_sims_castaway_product" && <CastawayProduct/> } */}
+          { state.pickedTable === "the_sims_castaway_product" && <CastawayProductNew/> }
         </div>
       </div>
     )

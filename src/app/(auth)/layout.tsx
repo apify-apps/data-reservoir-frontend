@@ -9,7 +9,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='w-full h-full min-h-[90svh] p-4 bg-bluish pb-24'>
+    <div className='w-full h-full min-h-[95svh] p-4 bg-bluish pb-24'>
       <QueryComponent>
         {children}
         <BottomNavigation/>

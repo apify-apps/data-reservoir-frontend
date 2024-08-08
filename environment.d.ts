@@ -7,4 +7,16 @@ declare global {
   }
 }
 
+//allows us to define custom properties for our columns
+declare module '@tanstack/react-table' {
+  interface ColumnMeta<TData extends RowData, TValue> {
+    filterVariant?: 'range' | 'select',
+
+    /**
+     * Enable sorting for this column? Default is true for accessor col
+     */
+    enableSorting: boolean
+  }
+}
+
 export {}

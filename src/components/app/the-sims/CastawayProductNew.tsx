@@ -1,3 +1,4 @@
+import BasicTable from '@/components/common/basic-table/BasicTable';
 import Loading from '@/components/common/loading/Loading';
 import Paper from '@/components/common/paper/Paper'
 import { API_ROUTE } from '@/constant/api-route';
@@ -14,22 +15,20 @@ interface ColumnFilter {
 }
 type ColumnFilterState = ColumnFilter[];
 
-export default function CastawayProduct() {
-  const [data, setData] = useState<TheSimsCastawayProductResponse[]>([]);
-  const [filter, setFilter] = useState<ColumnFilterState>([]);
-  const { isLoading } = useQuery({
+export default function CastawayProductNew() {
+  const { isLoading, data } = useQuery({
     queryKey: ["the-sims-castaway-product"],
     queryFn: async () => {
       let j = await request<TheSimsCastawayProductResponse[], {}>({
         method: "GET",
         url: API_ROUTE.THE_SIMS.CASTAWAY_PRODUCT,
       });
-      setData(j.data ?? []);
+      return (j?.data ?? []);
     }
   });
 
   const colHelper = createColumnHelper<TheSimsCastawayProductResponse>();
-  const columns = useMemo(() => ([
+  const columns = [
     colHelper.display({
       id: 'index',
       header: "#",
@@ -50,81 +49,59 @@ export default function CastawayProduct() {
     }),
     colHelper.accessor('category', {
       cell: p => p.getValue(),
-      header: "Category"
+      header: "Category",
+      meta: {
+        enableSorting: true,
+        filterVariant: 'select'
+      }
     }),
     colHelper.accessor('bladder', {
       cell: p => p.getValue(),
-      header: "Bladder"
+      header: "Bladder",
+      meta: {
+        enableSorting: true
+      }
     }),
     colHelper.accessor('energy', {
       cell: p => p.getValue(),
-      header: "Energy"
+      header: "Energy",
+      meta: {
+        enableSorting: true
+      }
     }),
     colHelper.accessor('hunger', {
       cell: p => p.getValue(),
-      header: "Hunger"
+      header: "Hunger",
+      meta: {
+        enableSorting: true
+      }
     }),
-    colHelper.display({
+    colHelper.accessor('eatenRaw', {
       cell: p => (
         <div className='flex justify-center'>
-          <Checkbox className='w-5 h-5' color='gray' disabled checked={p.row.original.eatenRaw}/>
+          <Checkbox className='w-5 h-5' color='gray' disabled checked={p.getValue()}/>
         </div>
       ),
       header: "Eaten Raw",
-      sortingFn: (a, b) => 1
+      meta: {
+        enableSorting: true
+      }
     }),
     colHelper.accessor('description', {
       cell: p => (
-        <span title={p.getValue()} className='text-sm text-justify line-clamp-3'>{p.getValue()}</span>
+        <span title={p.getValue()} className='text-xs text-justify line-clamp-4'>{p.getValue()}</span>
       ),
       header: "Description"
     }),
-  ]), [colHelper]);
-
-  const table = useReactTable<TheSimsCastawayProductResponse>({
-    columns: columns,
-    data: data,
-    state: {
-      columnFilters: filter
-    },
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel()
-  })
-
+  ];
 
   if (isLoading || !data) return (<Loading />);
   return (
-    <Paper className='p-12'>
-      <table>
-        <thead>
-          {
-            table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {
-                  headerGroup.headers.map(header => (
-                    <th key={header.id}>
-                      {!header.isPlaceholder && flexRender(header.column.columnDef.header, header.getContext())}
-                    </th>
-                  ))
-                }
-              </tr>
-            ))
-          }
-        </thead>
-        <tbody>
-          {
-            table.getRowModel().rows.map(row => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id} className='px-2 py-2'>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
+    <Paper className='max-h-[800px] overflow-auto'>
+      <div className='p-5 inline-block'>
+        <BasicTable data={data} columns={columns}/>
+
+      </div>
     </Paper>
   )
 }
