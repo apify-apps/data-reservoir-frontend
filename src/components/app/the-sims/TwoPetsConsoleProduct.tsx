@@ -3,26 +3,26 @@ import BasicTable from '@/components/common/basic-table/BasicTable';
 import Loading from '@/components/common/loading/Loading';
 import Paper from '@/components/common/paper/Paper'
 import { API_ROUTE } from '@/constant/api-route';
-import { TheSimsCastawayProductResponse } from '@/model/response/the-sims';
+import { TheSimsTwoPetsConsoleProductResponse } from '@/model/response/the-sims';
 import { request } from '@/utilities/http';
 import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
-import { Checkbox } from 'flowbite-react';
 import { getStaticIndex, multiSelectFilter } from '@/utilities/table';
+import { SIMOLEON_ICON } from '@/utilities/char';
 
-export default function CastawayProduct() {
+export default function TwoPetsConsoleProduct() {
   const { isLoading, data } = useQuery({
-    queryKey: ["the-sims-castaway-product"],
+    queryKey: ["the-sims-two-pets-console-product"],
     queryFn: async () => {
-      let j = await request<TheSimsCastawayProductResponse[], {}>({
+      let j = await request<TheSimsTwoPetsConsoleProductResponse[], {}>({
         method: "GET",
-        url: API_ROUTE.THE_SIMS.CASTAWAY_PRODUCT,
+        url: API_ROUTE.THE_SIMS.TWO_PETS_CONSOLE_PRODUCT,
       });
       return (j?.data ?? []);
     }
   });
 
-  const colHelper = createColumnHelper<TheSimsCastawayProductResponse>();
+  const colHelper = createColumnHelper<TheSimsTwoPetsConsoleProductResponse>();
   const columns = [
     colHelper.display({
       id: 'index',
@@ -41,6 +41,10 @@ export default function CastawayProduct() {
     colHelper.accessor('name', {
       cell: p => p.getValue(),
       header: "Name"
+    }),
+    colHelper.accessor('price', {
+      cell: p => `${SIMOLEON_ICON}${p.getValue()}`,
+      header: "Price"
     }),
     colHelper.accessor('category', {
       cell: p => p.getValue(),
@@ -66,15 +70,6 @@ export default function CastawayProduct() {
       header: "Hunger",
       enableSorting: true
     }),
-    colHelper.accessor('eatenRaw', {
-      cell: p => (
-        <div className='flex justify-center'>
-          <Checkbox className='w-5 h-5' color='gray' disabled checked={p.getValue()}/>
-        </div>
-      ),
-      header: "Eaten Raw",
-      enableSorting: true
-    }),
     colHelper.accessor('description', {
       cell: p => (
         <span title={p.getValue()} className='text-xs text-justify line-clamp-4'>{p.getValue()}</span>
@@ -86,7 +81,7 @@ export default function CastawayProduct() {
   return (
     <Paper className='max-h-[800px] overflow-auto rounded-md'>
       <div className='p-5 inline-block min-w-full'>
-        { (isLoading || !data) ? <Loading/> : <BasicTable data={data} columns={columns}/> }
+      { (isLoading || !data) ? <Loading/> : <BasicTable data={data} columns={columns}/> }
       </div>
     </Paper>
   )

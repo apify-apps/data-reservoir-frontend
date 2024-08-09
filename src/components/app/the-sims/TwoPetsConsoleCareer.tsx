@@ -3,26 +3,26 @@ import BasicTable from '@/components/common/basic-table/BasicTable';
 import Loading from '@/components/common/loading/Loading';
 import Paper from '@/components/common/paper/Paper'
 import { API_ROUTE } from '@/constant/api-route';
-import { TheSimsBustinOutCareerResponse } from '@/model/response/the-sims';
+import { TheSimsTwoPetsConsoleCareerResponse } from '@/model/response/the-sims';
 import { request } from '@/utilities/http';
 import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { getStaticIndex, multiSelectFilter } from '@/utilities/table';
 import { SIMOLEON_ICON } from '@/utilities/char';
 
-export default function BustinOutCareer() {
+export default function TwoPetsConsoleCareer() {
   const { isLoading, data } = useQuery({
-    queryKey: ["the-sims-bustin-out-career"],
+    queryKey: ["the-sims-two-pets-console-career"],
     queryFn: async () => {
-      let j = await request<TheSimsBustinOutCareerResponse[], {}>({
+      let j = await request<TheSimsTwoPetsConsoleCareerResponse[], {}>({
         method: "GET",
-        url: API_ROUTE.THE_SIMS.BUSTIN_OUT_CAREER,
+        url: API_ROUTE.THE_SIMS.TWO_PETS_CONSOLE_CAREER,
       });
       return (j?.data ?? []);
     }
   });
 
-  const colHelper = createColumnHelper<TheSimsBustinOutCareerResponse>();
+  const colHelper = createColumnHelper<TheSimsTwoPetsConsoleCareerResponse>();
   const columns = [
     colHelper.display({
       id: 'index',

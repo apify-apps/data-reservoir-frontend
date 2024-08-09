@@ -16,6 +16,7 @@ import { BaseResponse } from '@/model/response/base';
 import { API_ROUTE } from '@/constant/api-route';
 import Picker from '@/components/common/picker/Picker';
 import { request } from '@/utilities/http';
+import TableCategoryCount from '@/components/app/dashboard/TableCategoryCount';
 
 interface DashboardPageState {
   pickedCategories: string[]
@@ -39,7 +40,6 @@ export default function DashboardPage() {
 
   if (isLoading || !data) return (<Loading/>)
   else {
-
     let cleanData = data.filter(x => state.pickedCategories.length === 0 || state.pickedCategories.includes(x.category));
     let categories = data.map(x => x.category);
     let totalCategory = new Set(cleanData.map(x => x.category)).size;
@@ -83,27 +83,30 @@ export default function DashboardPage() {
         {/* Layer 2 : Table dan Treemap */}
         <div className='grid grid-cols-2 grid-rows-1 gap-4 max-md:grid-rows-2 max-md:grid-cols-1 min-h-80'>
           <div className='overflow-y-auto overflow-x-hidden rounded-md'>
-            <Paper className='p-4 !justify-start'>
-              <table>
-                <thead className='text-md border-b-2 border-gray-700'>
-                  <tr>
-                    <th className='pb-3'>No.</th>
-                    <th className='pb-3'>Category</th>
-                    <th className='pb-3'>Records</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    categorySummary.map((el, idx) => (
-                      <tr className={classNames('border-gray-700 border-b category-table', getCategoryColorClass(el.category))} key={idx}>
-                        <td className='px-2 py-2 text-center font-bold'>{idx + 1}</td>
-                        <td className='px-2 py-2 '>{el.category}</td>
-                        <td className='px-2 py-2 '>{el.rowCount}</td>
-                      </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
+            <Paper className='p-4 !justify-start min-w-full'>
+              <div className='min-w-full'>
+                <TableCategoryCount data={categorySummary}/>
+                {/* <table className='w-full'>
+                  <thead className='text-md border-b-2 border-gray-700'>
+                    <tr>
+                      <th className='pb-3'>No.</th>
+                      <th className='pb-3'>Category</th>
+                      <th className='pb-3'>Records</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      categorySummary.map((el, idx) => (
+                        <tr className={classNames('border-gray-700 border-b category-table', getCategoryColorClass(el.category))} key={idx}>
+                          <td className='px-2 py-2 text-center font-bold'>{idx + 1}</td>
+                          <td className='px-2 py-2 '>{el.category}</td>
+                          <td className='px-2 py-2 '>{el.rowCount}</td>
+                        </tr>
+                      ))
+                    }
+                  </tbody>
+                </table> */}
+              </div>
             </Paper>
           </div>
           <div>
