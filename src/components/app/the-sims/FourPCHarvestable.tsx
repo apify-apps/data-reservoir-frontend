@@ -5,10 +5,10 @@ import Paper from '@/components/common/paper/Paper'
 import { API_ROUTE } from '@/constant/api-route';
 import { TheSimsFourPCHarvestableResponse } from '@/model/response/the-sims';
 import { request } from '@/utilities/http';
-// import { multiSelectFilter } from '@/utilities/table';
 import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Checkbox } from 'flowbite-react';
+import { getStaticIndex, multiSelectFilter } from '@/utilities/table';
 
 export default function FourPCHarvestable() {
   const { isLoading, data } = useQuery({
@@ -27,7 +27,7 @@ export default function FourPCHarvestable() {
     colHelper.display({
       id: 'index',
       header: "#",
-      cell: p => (<div className='text-center font-bold'>{p.row.index + 1}</div>),
+      cell: ({row, table}) => (<div className='text-center font-bold'>{getStaticIndex(row, table)}</div>),
     }),
     colHelper.display({
       id: "image",
@@ -45,18 +45,16 @@ export default function FourPCHarvestable() {
     colHelper.accessor('form', {
       cell: p => p.getValue(),
       header: "Form",
-      filterFn: 'arrIncludesSome',
+      filterFn: multiSelectFilter,
+      enableSorting: true,
       meta: {
-        enableSorting: true,
         filterVariant: 'select'
       }
     }),
     colHelper.display({
       cell: p => `${p.row.original.baseValue} - ${p.row.original.perfectValue}`,
       header: "Base - Perfect Value",
-      meta: {
-        enableSorting: true
-      }
+      enableSorting: true
     }),
     colHelper.accessor('verticalGarden', {
       cell: p => (
@@ -65,9 +63,7 @@ export default function FourPCHarvestable() {
         </div>
       ),
       header: "Vertical Garden",
-      meta: {
-        enableSorting: true
-      }
+      enableSorting: true
     }),
     colHelper.accessor('description', {
       cell: p => (
@@ -77,11 +73,10 @@ export default function FourPCHarvestable() {
     }),
   ];
 
-  if (isLoading || !data) return (<Loading />);
   return (
     <Paper className='max-h-[800px] overflow-auto rounded-md'>
-      <div className='p-5 inline-block'>
-        <BasicTable data={data} columns={columns}/>
+      <div className='p-5 inline-block min-w-full'>
+      { (isLoading || !data) ? <Loading/> : <BasicTable data={data} columns={columns}/> }
       </div>
     </Paper>
   )

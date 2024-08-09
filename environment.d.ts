@@ -11,11 +11,6 @@ declare global {
 declare module '@tanstack/react-table' {
   interface ColumnMeta<TData extends RowData, TValue> {
     filterVariant?: 'range' | 'select',
-
-    /**
-     * Enable sorting for this column? Default is true for accessor col
-     */
-    enableSorting: boolean
   }
 }
 

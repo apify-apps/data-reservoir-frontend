@@ -33,7 +33,7 @@ export default function BasicTable<T>(props : BasicTableProps<T>) {
   });
 
   return (
-    <table className='relative min-h-96 rounded-md overflow-hidden'>
+    <table className='relative min-h-96 rounded-md overflow-hidden min-w-full'>
       <thead className='sticky top-0 bg-bluish-200'>
         {
           reactTable.getHeaderGroups().map(headerGroup => (
@@ -54,7 +54,7 @@ export default function BasicTable<T>(props : BasicTableProps<T>) {
                         <div className='flex justify-center gap-2'>
                           {flexRender(header.column.columnDef.header, header.getContext())}
                           {
-                            header.column.columnDef.meta?.enableSorting && (
+                            header.column.columnDef.enableSorting && (
                               <div title='Hold shift while clicking for multisort' className='cursor-pointer hover:bg-slate-700 rounded-sm content-center' onClick={header.column.getToggleSortingHandler()}>
                                 {sortSymbol}
                               </div>

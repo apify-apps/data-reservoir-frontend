@@ -3,6 +3,9 @@
 import BustinOutCareer from "@/components/app/the-sims/BustinOutCareer";
 import CastawayProduct from "@/components/app/the-sims/CastawayProduct";
 import FourPCHarvestable from "@/components/app/the-sims/FourPCHarvestable";
+import TwoConsoleCareer from "@/components/app/the-sims/TwoConsoleCareer";
+import TwoPetsConsoleCareer from "@/components/app/the-sims/TwoPetsConsoleCareer";
+import TwoPetsConsoleProduct from "@/components/app/the-sims/TwoPetsConsoleProduct";
 import Loading from "@/components/common/loading/Loading";
 import Paper from "@/components/common/paper/Paper";
 import Picker from "@/components/common/picker/Picker";
@@ -41,8 +44,8 @@ export default function TheSimsPage() {
 
   if (isLoading || !summaryData) return (<Loading/>)
   else {
-    let totalTable = summaryData.flatMap(x => x.tables).length;
-    let totalData = summaryData.flatMap(x => x.tables).reduce((prev, current) => prev + current.rowCount, 0);
+    let totalTable = summaryData.flatMap(x => x.tables).filter(x => !state.pickedTable || state.pickedTable === x.tableName).length;
+    let totalData = summaryData.flatMap(x => x.tables).filter(x => !state.pickedTable || state.pickedTable === x.tableName).reduce((prev, current) => prev + current.rowCount, 0);
 
     let onClickCategory = (pickedTable: string, enabled: boolean) => {
       setState(produce(s => {
@@ -76,6 +79,9 @@ export default function TheSimsPage() {
           { state.pickedTable === "the_sims_castaway_product" && <CastawayProduct/> }
           { state.pickedTable === "the_sims_four_pc_harvestable" && <FourPCHarvestable/> }
           { state.pickedTable === "the_sims_bustin_out_career" && <BustinOutCareer/> }
+          { state.pickedTable === "the_sims_two_console_career" && <TwoConsoleCareer/> }
+          { state.pickedTable === "the_sims_two_pets_console_career" && <TwoPetsConsoleCareer/> }
+          { state.pickedTable === "the_sims_two_pets_console_product" && <TwoPetsConsoleProduct/> }
         </div>
       </div>
     )
