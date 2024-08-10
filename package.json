@@ -28,6 +28,7 @@
     "sequelize": "^6.37.3",
     "tailwind-scrollbar": "^3.1.0",
     "tedious": "^18.3.0",
+    "yup": "^1.4.0",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

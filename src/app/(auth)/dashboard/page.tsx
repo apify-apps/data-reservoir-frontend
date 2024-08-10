@@ -4,19 +4,21 @@ import { DashboardResponse } from '@/model/response/dashboard';
 import { useQuery } from '@tanstack/react-query'
 import React, { useState } from 'react'
 import _ from 'lodash';
-import classNames from 'classnames'
 import { produce } from 'immer';
 import Paper from '@/components/common/paper/Paper';
 import ComingSoon from '@/components/common/coming-soon/ComingSoon';
 import TableBarChart from '@/components/app/dashboard/TableBarChart';
-import { getCategoryColorClass } from '@/utilities/color';
 import TableTreeMap from '@/components/app/dashboard/TableTreeMap';
 import Loading from '@/components/common/loading/Loading';
-import { BaseResponse } from '@/model/response/base';
 import { API_ROUTE } from '@/constant/api-route';
 import Picker from '@/components/common/picker/Picker';
 import { request } from '@/utilities/http';
 import TableCategoryCount from '@/components/app/dashboard/TableCategoryCount';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Dashboard - Birdeye View'
+}
 
 interface DashboardPageState {
   pickedCategories: string[]
@@ -28,7 +30,7 @@ export default function DashboardPage() {
   });
 
   let { isLoading, data } = useQuery({
-    queryKey: ["the-sims-summary"],
+    queryKey: ["dashboard"],
     queryFn: async () => {
       let j = await request<DashboardResponse[], {}>({
         method: "GET",
@@ -51,7 +53,6 @@ export default function DashboardPage() {
     }))
 
     // Data yang diambil harus berdasarkan kategori yang diambil
-    
     let onClickCategory = (category: string, enabled: boolean) => {
       setState(produce(s => {
         if (enabled) s.pickedCategories.push(category);
@@ -86,33 +87,12 @@ export default function DashboardPage() {
             <Paper className='p-4 !justify-start min-w-full'>
               <div className='min-w-full'>
                 <TableCategoryCount data={categorySummary}/>
-                {/* <table className='w-full'>
-                  <thead className='text-md border-b-2 border-gray-700'>
-                    <tr>
-                      <th className='pb-3'>No.</th>
-                      <th className='pb-3'>Category</th>
-                      <th className='pb-3'>Records</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      categorySummary.map((el, idx) => (
-                        <tr className={classNames('border-gray-700 border-b category-table', getCategoryColorClass(el.category))} key={idx}>
-                          <td className='px-2 py-2 text-center font-bold'>{idx + 1}</td>
-                          <td className='px-2 py-2 '>{el.category}</td>
-                          <td className='px-2 py-2 '>{el.rowCount}</td>
-                        </tr>
-                      ))
-                    }
-                  </tbody>
-                </table> */}
               </div>
             </Paper>
           </div>
           <div>
             <Paper className='h-full p-4'>
-              {/* <ComingSoon message='Tree Map'/> */}
-              <TableTreeMap data={data}/>
+              <TableTreeMap data={cleanData}/>
             </Paper>
           </div>
         </div>
@@ -127,7 +107,6 @@ export default function DashboardPage() {
           <div>
             <Paper className='h-full p-4'>
               <TableBarChart data={cleanData.flatMap(x => x.tables.flatMap(y => ({...y, category: x.category})))}/>
-              {/* <ComingSoon message='Bar Chart (Records per Table)'/> */}
             </Paper>
           </div>
         </div>

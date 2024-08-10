@@ -1,6 +1,6 @@
 import { DB } from "@/database/client";
 import { DashboardResponse } from "@/model/response/dashboard";
-import { appendBase } from "@/utilities/api";
+import { newResponse } from "@/utilities/api";
 import { sql } from "drizzle-orm";
 import _ from "lodash";
 import { NextRequest, NextResponse } from "next/server";
@@ -47,5 +47,5 @@ export async function GET(request: NextRequest) {
       tables: value.map(v => ({ rowCount: v.rowCount, tableName: v.tableName }))
     } as DashboardResponse))
     .toArray();
-  return NextResponse.json(appendBase(conv.value()));
+  return NextResponse.json(newResponse(conv.value()));
 }

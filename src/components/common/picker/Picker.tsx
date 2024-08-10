@@ -5,18 +5,20 @@ export type PickerProps = {
   singleOption: false,
   options: string[] | {label: string, value: string}[],
   selected: string[],
-  onClickCategory: (category: string, enabled: boolean) => void
+  onClickCategory: (category: string, enabled: boolean) => void,
+  className?: string
 } | {
   singleOption: true,
   options: string[] | {label: string, value: string}[],
   selected: string | null
-  onClickCategory: (category: string, enabled: boolean) => void
+  onClickCategory: (category: string, enabled: boolean) => void,
+  className?: string
 }
 
 export default function Picker(props: PickerProps) {
 
   return (
-    <div className='grid grid-cols-3 gap-y-4 gap-x-1'>
+    <div className={classNames('grid grid-cols-3 gap-y-4 gap-x-1', props.className)}>
       {
         props.options.map(c => {
 

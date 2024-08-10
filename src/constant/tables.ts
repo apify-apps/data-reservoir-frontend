@@ -17,3 +17,9 @@ export const TheSimsTableLabel: {[key in TheSimsTableType]: string } = {
   "the_sims_four_pc_harvestable": "Four PC Harvestable",
   "the_sims_two_pets_console_product": "Two Pets Console Product"
 }
+
+export type HaydayMenu = "product" | "building"; 
+export const HaydayTab: { [key in HaydayMenu]: string } = {
+  "product": "Product",
+  "building": "Building"
+};

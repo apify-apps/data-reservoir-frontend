@@ -12,12 +12,16 @@ import Picker from "@/components/common/picker/Picker";
 import { API_ROUTE } from "@/constant/api-route";
 import { TheSimsTableLabel, TheSimsTableType } from "@/constant/tables";
 import { DashboardRequest } from "@/model/request/dashboard";
-import { BaseResponse } from "@/model/response/base";
 import { DashboardResponse } from "@/model/response/dashboard";
 import { request } from "@/utilities/http";
 import { useQuery } from "@tanstack/react-query";
 import { produce } from "immer";
+import { Metadata } from "next";
 import { useState } from "react";
+
+export const metadata: Metadata = {
+  title: 'The Sims - Birdeye View'
+}
 
 interface TheSimsPageState {
   pickedTable: TheSimsTableType | null
