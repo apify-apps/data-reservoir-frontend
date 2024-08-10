@@ -40,7 +40,7 @@ export default function BottomNavigation() {
         <Link title='Farm Frenzy' className='inactive m-auto h-full p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-2xl flex justify-center items-center hover:text-white/35' href='#'>
           <PiFarm />
         </Link>
-        <Link title='Hayday' className='inactive m-auto h-full p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-2xl flex justify-center items-center hover:text-white/35' href='#'>
+        <Link title='Hayday' className='m-auto h-full p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-2xl flex justify-center items-center hover:text-white/35' href='/hayday'>
           <CiWheat />
         </Link>
         <Link title='Pizza Frenzy' className='inactive m-auto h-full p-2 bg-bluish hover:bg-bluish/35 min-h-9 rounded-md text-2xl flex justify-center items-center hover:text-white/35' href='#'>
