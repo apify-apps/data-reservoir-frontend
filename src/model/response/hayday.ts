@@ -5,6 +5,7 @@ export type HayDayProductResponse = InferSelectModel<typeof haydayProduct>
 export type HayDayBuilding = InferSelectModel<typeof haydayBuilding>
 
 export type HayDayProductDetailResponse = HayDayProductResponse & {
-  requiredIn: HayDayProductResponse[],
-  producer?: HayDayBuilding
+  ingredient: (Pick<HayDayProductResponse, 'image' | 'name' | 'category'> & { quantity: number })[],
+  usedBy: (Pick<HayDayProductResponse, 'image' | 'name' | 'category'> & { quantity: number })[],
+  producer?: Pick<HayDayBuilding, 'name' | 'id' | 'image'>
 }

@@ -1,13 +1,14 @@
 import { DB } from "@/database/client";
 import { haydayProduct } from "@/database/schema";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { newResponse } from "@/utilities/api";
 
 export async function GET() {
   return NextResponse.json(newResponse(
     await DB.select()
-      .from(haydayProduct))
-  )
+      .from(haydayProduct)
+      .limit(10)
+  ));
   // try
   // {
   //   let data = PaginationRequestSchema.validateSync(params);
