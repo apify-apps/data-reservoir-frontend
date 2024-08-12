@@ -1,29 +1,41 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import BasicTable from '@/components/common/basic-table/BasicTable';
 import Loading from '@/components/common/loading/Loading';
 import Paper from '@/components/common/paper/Paper'
 import { API_ROUTE } from '@/constant/api-route';
-import { TheSimsCastawayProductResponse } from '@/model/response/the-sims';
 import { request } from '@/utilities/http';
 import { useQuery } from '@tanstack/react-query';
-import { createColumnHelper } from '@tanstack/react-table';
+import { createColumnHelper, Row } from '@tanstack/react-table';
 import { Checkbox } from 'flowbite-react';
 import { getStaticIndex, multiSelectFilter } from '@/utilities/table';
+import { HayDayBuildingDetailResponse, HayDayBuildingResponse, HayDayProductDetailResponse, HayDayProductResponse } from '@/model/response/hayday';
+import { secondToTimespan } from '@/utilities/general';
 
-export default function CastawayProduct() {
+export default function HaydayBuilding() {
   const { isLoading, data } = useQuery({
-    queryKey: ["the-sims-castaway-product"],
+    queryKey: ["hayday-product"],
     queryFn: async () => {
-      let j = await request<TheSimsCastawayProductResponse[], {}>({
+      let j = await request < HayDayBuildingResponse[], {}>({
         method: "GET",
-        url: API_ROUTE.THE_SIMS.CASTAWAY_PRODUCT,
+        url: API_ROUTE.HAY_DAY.BUILDING,
       });
       return (j?.data ?? []);
     }
   });
 
-  const colHelper = createColumnHelper<TheSimsCastawayProductResponse>();
+  const colHelper = createColumnHelper<HayDayBuildingResponse>();
   const columns = [
+    colHelper.display({
+      id: 'expand',
+      header: (p) => {
+        return (<div title='Click to unexpand rows' className='cursor-pointer' onClick={_ => {
+          p.table.getRowModel().rows.filter(o => o.getIsExpanded()).forEach(o => o.toggleExpanded(false))
+        }}>
+          🔴
+        </div>)
+      },
+      cell: (p) => !p.row.getCanExpand() ? '☹' :  (<div className='cursor-pointer' onClick={p.row.getToggleExpandedHandler()}>{ p.row.getIsExpanded() ? '👇' : '👉' }</div>),
+    }),
     colHelper.display({
       id: 'index',
       header: "#",
@@ -40,53 +52,108 @@ export default function CastawayProduct() {
     }),
     colHelper.accessor('name', {
       cell: p => p.getValue(),
-      header: "Name"
-    }),
-    colHelper.accessor('category', {
-      cell: p => p.getValue(),
-      header: "Category",
-      filterFn: multiSelectFilter,
+      header: "Name",
       enableSorting: true,
-      meta: {
-        filterVariant: 'select'
-      }
     }),
-    colHelper.accessor('bladder', {
+    colHelper.accessor('price', {
       cell: p => p.getValue(),
-      header: "Bladder",
+      header: "Price",
       enableSorting: true
     }),
-    colHelper.accessor('energy', {
+    colHelper.accessor('level', {
       cell: p => p.getValue(),
-      header: "Energy",
+      header: "Level",
       enableSorting: true
     }),
-    colHelper.accessor('hunger', {
+    colHelper.accessor('time', {
+      cell: p => secondToTimespan(p.getValue()),
+      header: "Time",
+      enableSorting: true
+    }),
+    colHelper.accessor('xp', {
       cell: p => p.getValue(),
-      header: "Hunger",
+      header: "XP",
       enableSorting: true
-    }),
-    colHelper.accessor('eatenRaw', {
-      cell: p => (
-        <div className='flex justify-center'>
-          <Checkbox className='w-5 h-5' color='gray' disabled checked={p.getValue()}/>
-        </div>
-      ),
-      header: "Eaten Raw",
-      enableSorting: true
-    }),
-    colHelper.accessor('description', {
-      cell: p => (
-        <span title={p.getValue()} className='text-xs text-justify line-clamp-4'>{p.getValue()}</span>
-      ),
-      header: "Description"
     }),
   ];
 
   return (
     <Paper className='max-h-[800px] overflow-auto rounded-md'>
       <div className='p-5 inline-block min-w-full'>
-        { (isLoading || !data) ? <Loading/> : <BasicTable data={data} columns={columns}/> }
+        { (isLoading || !data) ? <Loading/> : <BasicTable data={data} columns={columns} expandElement={r => <ExpandMe row={r}/>}/> }
+      </div>
+    </Paper>
+  )
+}
+
+interface ExpandMeProps {
+  row: Row<HayDayBuildingResponse>
+}
+
+function ExpandMe(props : ExpandMeProps) {
+  let memoID = useMemo(() => props.row.original.id, [props.row.original.id]);
+  let { data, isLoading } = useQuery({
+    queryKey: [memoID],
+    queryFn: async () => {
+      let j = await request<HayDayBuildingDetailResponse, {}>({
+        method: "GET",
+        url: API_ROUTE.HAY_DAY.BUILDING + `/${memoID}`,
+      });
+      return (j!.data!);
+    },
+  });
+
+  if (isLoading) return (<Loading/>);
+
+  return (
+    <Paper className='bg-slate-700'>
+      <div className='flex gap-5 py-3 px-4'>
+        <div className='flex items-center'>
+          <img src={props.row.original.image} alt={props.row.original.name} className='w-64 h-64' />
+        </div>
+        <div className='flex-1'>
+          <div>
+            <h1 className='text-white font-bold text-2xl'>{props.row.original.name}</h1>
+            <div className='flex gap-5'>
+              <div className='flex gap-2' title='Price per unit'>
+                <img src="https://static.wikia.nocookie.net/hayday/images/6/6d/Coin.png/" alt="Coin" className='w-5 h-5' />
+                <span>{props.row.original.price}</span>
+              </div>
+              <div className='flex gap-2' title='Exp level needed'>
+                <img src="https://static.wikia.nocookie.net/hayday/images/e/e1/Experience.png/" alt="XP" className='w-5 h-5' />
+                <span>Lvl. {props.row.original.level}</span>
+              </div>
+              <div className='flex gap-2' title='XP per unit'>
+                <img src="https://static.wikia.nocookie.net/hayday/images/e/e1/Experience.png/" alt="XP" className='w-5 h-5' />
+                <span>+{props.row.original.xp}</span>
+              </div>
+              <div className='flex gap-2' title='Time'>
+                <img src="https://static.wikia.nocookie.net/hayday/images/3/35/Clock.png/" alt="Time" className='w-5 h-5' />
+                <span>{secondToTimespan(props.row.original.time)}</span>
+              </div>
+            </div>
+            {
+              (!isLoading && data && data.produces.length > 0) && (
+              <>
+                <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700" />
+                <div title='Used by'>
+                  { ((data.produces.length) > 0) && <h3 className='font-bold mb-4'>Produces</h3> }
+                  {
+                    data.produces.map(used => (
+                      <div className='flex items-center gap-3' key={used.name} title={used.name}>
+                        <img src={used.image} alt={used.name} className='w-8 h-8' />
+                        <div className='flex gap-2'>
+                          <span className='font-bold'>{used.name}</span>
+                          <span>Level {used.level}</span>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </Paper>
   )
