@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import BasicTable from '@/components/common/basic-table/BasicTable';
 import Loading from '@/components/common/loading/Loading';
 import Paper from '@/components/common/paper/Paper'
@@ -98,58 +98,112 @@ export default function HaydayProduct() {
   return (
     <Paper className='max-h-[800px] overflow-auto rounded-md'>
       <div className='p-5 inline-block min-w-full'>
-        { (isLoading || !data) ? <Loading/> : <BasicTable data={data} columns={columns} expandElement={ExpandMe}/> }
+        { (isLoading || !data) ? <Loading/> : <BasicTable data={data} columns={columns} expandElement={r => <ExpandMe row={r}/>}/> }
       </div>
     </Paper>
   )
 }
 
-function ExpandMe(row: Row<HayDayProductResponse>) {
+interface ExpandMeProps {
+  row: Row<HayDayProductResponse>
+}
 
+function ExpandMe(props : ExpandMeProps) {
+  let memoID = useMemo(() => props.row.original.id, [props.row.original.id]);
   let { data, isLoading } = useQuery({
-    queryKey: [row.original.id],
+    queryKey: [memoID],
     queryFn: async () => {
       let j = await request<HayDayProductDetailResponse, {}>({
         method: "GET",
-        url: API_ROUTE.HAY_DAY.PRODUCT + `/${row.original.id}`,
+        url: API_ROUTE.HAY_DAY.PRODUCT + `/${memoID}`,
       });
       return (j!.data!);
     },
-  })
+  });
+
+  if (isLoading) return (<Loading/>);
 
   return (
-    <div className='flex gap-5 py-3'>
-      <div className='flex items-center'>
-        <img src={row.original.image} alt={row.original.name} className='w-20 h-20' />
-      </div>
-      <div className='flex-1'>
-        <h1 className='text-white font-bold text-2xl'>{row.original.name}</h1>
-        <div className='flex gap-5'>
-          <div className='flex gap-2' title='Price per unit'>
-            <img src="https://static.wikia.nocookie.net/hayday/images/6/6d/Coin.png/" alt="Coin" className='w-5 h-5' />
-            <span>{row.original.price}</span>
-          </div>
-          <div className='flex gap-2' title='Exp level needed'>
-            <img src="https://static.wikia.nocookie.net/hayday/images/e/e1/Experience.png/" alt="XP" className='w-5 h-5' />
-            <span>Lvl. {row.original.level}</span>
-          </div>
-          <div className='flex gap-2' title='XP per unit'>
-            <img src="https://static.wikia.nocookie.net/hayday/images/e/e1/Experience.png/" alt="XP" className='w-5 h-5' />
-            <span>+{row.original.xp}</span>
-          </div>
-          <div className='flex gap-2' title='Time'>
-            <img src="https://static.wikia.nocookie.net/hayday/images/3/35/Clock.png/" alt="Time" className='w-5 h-5' />
-            <span>{secondToTimespan(row.original.time)}</span>
+    <Paper className='bg-slate-700'>
+      <div className='flex gap-5 py-3 px-4'>
+        <div className='flex items-center'>
+          <img src={props.row.original.image} alt={props.row.original.name} className='w-32 h-32' />
+        </div>
+        <div className='flex-1'>
+          <div>
+            <h1 className='text-white font-bold text-2xl'>{props.row.original.name}</h1>
+            <div className='flex gap-5'>
+              <div className='flex gap-2' title='Price per unit'>
+                <img src="https://static.wikia.nocookie.net/hayday/images/6/6d/Coin.png/" alt="Coin" className='w-5 h-5' />
+                <span>{props.row.original.price}</span>
+              </div>
+              <div className='flex gap-2' title='Exp level needed'>
+                <img src="https://static.wikia.nocookie.net/hayday/images/e/e1/Experience.png/" alt="XP" className='w-5 h-5' />
+                <span>Lvl. {props.row.original.level}</span>
+              </div>
+              <div className='flex gap-2' title='XP per unit'>
+                <img src="https://static.wikia.nocookie.net/hayday/images/e/e1/Experience.png/" alt="XP" className='w-5 h-5' />
+                <span>+{props.row.original.xp}</span>
+              </div>
+              <div className='flex gap-2' title='Time'>
+                <img src="https://static.wikia.nocookie.net/hayday/images/3/35/Clock.png/" alt="Time" className='w-5 h-5' />
+                <span>{secondToTimespan(props.row.original.time)}</span>
+              </div>
+            </div>
+            {
+              (!isLoading && data && (
+                (data.ingredient.length) > 0 ||
+                (data.usedBy.length) > 0 ||
+                !!data.producer
+              )) && (
+              <>
+                <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700"/>
+                <div className='flex justify-between'>
+                  <div title='Ingredient'>
+                    { ((data.ingredient.length) > 0) && <h3 className='font-bold mb-4'>Ingredient</h3> }
+                    {
+                      data.ingredient.map(ing => (
+                        <div className='flex items-center gap-3' key={ing.name} title={ing.name}>
+                          <img src={ing.image} alt={ing.name} className='w-8 h-8' />
+                          <div className='flex gap-2'>
+                            <span className='font-bold'>{ing.name}</span>
+                            <span>{ing.quantity}</span>
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </div>
+                  <div>
+                    {(data.producer) && (
+                      <>
+                        <h3 className='font-bold mb-4'>Made with</h3>
+                        <div className='flex items-center gap-3' key={data.producer?.name} title={data.producer?.name}>
+                          <img src={data.producer?.image} alt={data.producer?.name} className='w-32 h-32' />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <div title='Used by'>
+                    { ((data.usedBy.length) > 0) && <h3 className='font-bold mb-4'>Used By</h3> }
+                    {
+                      data.usedBy.map(used => (
+                        <div className='flex items-center gap-3' key={used.name} title={used.name}>
+                          <img src={used.image} alt={used.name} className='w-8 h-8' />
+                          <div className='flex gap-2'>
+                            <span className='font-bold'>{used.name}</span>
+                            <span>{used.quantity}</span>
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
-      
-      <div className='flex'>
-        <div className=''>
-
-        </div>
-      </div>
-    </div>
+    </Paper>
   )
 }
 

@@ -1,4 +1,3 @@
-import { BaseResponse } from '@/model/response/base';
 export interface BaseResponse<T> {
   date: Date,
   message: string,

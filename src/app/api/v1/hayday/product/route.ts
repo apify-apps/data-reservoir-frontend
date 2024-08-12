@@ -7,7 +7,6 @@ export async function GET() {
   return NextResponse.json(newResponse(
     await DB.select()
       .from(haydayProduct)
-      .limit(10)
   ));
   // try
   // {
