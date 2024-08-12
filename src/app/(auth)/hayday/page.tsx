@@ -11,12 +11,12 @@ import { DashboardResponse } from "@/model/response/dashboard";
 import { request } from "@/utilities/http";
 import { useQuery } from "@tanstack/react-query";
 import { produce } from "immer";
-import { Metadata } from "next";
+// import { Metadata } from "next";
 import { useState } from "react";
 
-export const metadata: Metadata = {
-  title: 'Hayday - Birdeye View'
-}
+// export const metadata: Metadata = {
+//   title: 'Hayday - Birdeye View'
+// }
 
 interface HaydayPageState {
   pickedTab: HaydayMenu | null

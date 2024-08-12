@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react'
-import { Column, ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFacetedRowModel, getFacetedUniqueValues, getFilteredRowModel, getSortedRowModel, RowData, useReactTable } from '@tanstack/react-table'
+import React, { Fragment, useMemo, useState } from 'react'
+import { Column, ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getExpandedRowModel, getFacetedRowModel, getFacetedUniqueValues, getFilteredRowModel, getSortedRowModel, Row, RowData, useReactTable } from '@tanstack/react-table'
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { BiCheck } from 'react-icons/bi';
 import classNames from 'classnames';
@@ -7,6 +7,7 @@ import classNames from 'classnames';
 export interface BasicTableProps<T> {
   data: T[],
   columns: ColumnDef<T, any>[],
+  expandElement?: (row: Row<T>) => React.ReactNode
 }
 
 export default function BasicTable<T>(props : BasicTableProps<T>) {
@@ -15,6 +16,7 @@ export default function BasicTable<T>(props : BasicTableProps<T>) {
 
   const cachedColumn = useMemo(() => props.columns, [props.columns]);
   const [cachedData, _] = useState(props.data);
+  const [canExpand, __] = useState(!!props.expandElement);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const reactTable = useReactTable({
@@ -24,14 +26,19 @@ export default function BasicTable<T>(props : BasicTableProps<T>) {
       columnFilters
     },
     enableColumnFilters: true,
+    
+    getRowCanExpand: () => canExpand,
+    enableExpanding: !!props.expandElement,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFilteredRowModel: getFilteredRowModel()
+    getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel()
   });
 
+  console.log("Expand", !!props.expandElement);
   return (
     <table className='relative min-h-96 rounded-md overflow-hidden min-w-full'>
       <thead className='sticky top-0 bg-bluish-200'>
@@ -76,15 +83,29 @@ export default function BasicTable<T>(props : BasicTableProps<T>) {
       <tbody>
         {
           reactTable.getRowModel().rows.map(row => (
-            <tr key={row.id}>
+            <Fragment key={row.id}>
+              <tr>
+                {
+                  row.getVisibleCells().map(cell => (
+                    <td key={cell.id} className='px-2 py-2'>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))
+                }
+              </tr>
               {
-                row.getVisibleCells().map(cell => (
-                  <td key={cell.id} className='px-2 py-2'>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                ((!!props.expandElement && row.getIsExpanded()) && (
+                  <tr>
+                    <td colSpan={row.getVisibleCells().length}>
+                      <div>
+                        {props.expandElement(row)}
+                      </div>
+                    </td>
+                  </tr>
                 ))
               }
-            </tr>
+            </Fragment>
+            
           ))
         }
       </tbody>
