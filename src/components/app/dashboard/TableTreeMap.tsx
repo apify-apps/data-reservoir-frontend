@@ -61,10 +61,10 @@ export default function TableTreeMap(props : TableTreeMapProps) {
   }
 
   return (
-    <div className='overflow-x-scroll h-full'>
+    <div className='overflow-x-scroll !h-full'>
       <ReactECharts
         option={option}
-        className='h-full'
+        className='!h-full'
       />
     </div>
   )
