@@ -50,7 +50,11 @@ export default function TwoPetsConsoleCareer() {
     }),
     colHelper.accessor('job', {
       cell: p => p.getValue(),
-      header: "Job"
+      header: "Job",
+      filterFn: 'includesString',
+      meta: {
+        filterVariant: 'search'
+      }
     }),
     colHelper.accessor('salary', {
       cell: p => `${SIMOLEON_ICON}${p.getValue()}`,

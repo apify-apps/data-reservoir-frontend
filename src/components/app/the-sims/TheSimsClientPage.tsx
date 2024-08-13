@@ -53,8 +53,6 @@ export default function TheSimsClientPage() {
       }))
     }
 
-    let a = Object.entries(TheSimsTableLabel).map(([k, v]) => ({ label: v, value: k }));
-
     return (
       <div className='flex flex-col gap-4 text-white'>
         {/* Layer 1 : Angka2 dan filter */}
@@ -68,11 +66,10 @@ export default function TheSimsClientPage() {
             <h1 className='xl:text-5xl lg:text-3xl max-lg:text-4xl max-sm:text-2xl text font-bold'>{totalData}</h1>
           </Paper>
           <Paper className='px-4 col-span-2 p-4 text-xs max-lg:col-span-2'>
-            <Picker options={a} onClickCategory={onClickCategory} singleOption selected={state.pickedTable}/>
+            <Picker options={Object.entries(TheSimsTableLabel).map(([k, v]) => ({ label: v, value: k }))} onClickCategory={onClickCategory} singleOption selected={state.pickedTable}/>
           </Paper>
         </div>
 
-        {/* Layer 2 : Table dan Treemap */}
         <div className='min-h-[100vh]'>
           {/* { state.pickedTable === "the_sims_castaway_product" && <CastawayProduct/> } */}
           { state.pickedTable === "the_sims_castaway_product" && <CastawayProduct/> }

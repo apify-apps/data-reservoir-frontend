@@ -23,3 +23,16 @@ export const HaydayTab: { [key in HaydayMenu]: string } = {
   "product": "Product",
   "building": "Building"
 };
+
+export type FarmFrenzyTableType =
+  "farm_frenzy_one_product" |
+  "farm_frenzy_two_product" |
+  "farm_frenzy_two_pizza_product" |
+  "farm_frenzy_three_product";
+
+export const FarmFrenzyTableLabel: {[key in FarmFrenzyTableType]: string } = {
+  "farm_frenzy_one_product": "Farm Frenzy One Product",
+  "farm_frenzy_two_product": "Farm Frenzy Two Product",
+  "farm_frenzy_two_pizza_product": "Farm Frenzy Two Pizza Product",
+  "farm_frenzy_three_product": "Farm Frenzy Three Product"
+}

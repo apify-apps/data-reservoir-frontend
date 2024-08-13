@@ -44,8 +44,7 @@ export const ROUTES: ROUTE_TYPE[] = [
     id: 'farm-frenzy',
     name: 'Farm Frenzy',
     icon: PiFarm,
-    link: '/farm-frenzy',
-    inactive: true
+    link: '/farm-frenzy'
   },
   {
     id: 'hayday',

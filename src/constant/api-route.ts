@@ -17,6 +17,12 @@ export const API_SHORTHAND = Object.freeze({
   HAY_DAY: {
     PRODUCT: 'product',
     BUILDING: 'building'
+  },
+  FARM_FRENZY: {
+    ONE_PRODUCT: 'one-product',
+    TWO_PRODUCT: 'two-product',
+    TWO_PIZZA_PRODUCT: 'two-pizza-product',
+    THREE_PRODUCT: 'three-product',
   }
 } as const)
 /**
@@ -35,5 +41,11 @@ export const API_ROUTE = Object.freeze({
   HAY_DAY: {
     PRODUCT: `${HOST}/hayday/${API_SHORTHAND.HAY_DAY.PRODUCT}`,
     BUILDING: `${HOST}/hayday/${API_SHORTHAND.HAY_DAY.BUILDING}`
+  },
+  FARM_FRENZY: {
+    ONE_PRODUCT: `${HOST}/farm-frenzy/${API_SHORTHAND.FARM_FRENZY.ONE_PRODUCT}`,
+    TWO_PRODUCT: `${HOST}/farm-frenzy/${API_SHORTHAND.FARM_FRENZY.TWO_PRODUCT}`,
+    TWO_PIZZA_PRODUCT: `${HOST}/farm-frenzy/${API_SHORTHAND.FARM_FRENZY.TWO_PIZZA_PRODUCT}`,
+    THREE_PRODUCT: `${HOST}/farm-frenzy/${API_SHORTHAND.FARM_FRENZY.THREE_PRODUCT}`,
   }
 } as const)
