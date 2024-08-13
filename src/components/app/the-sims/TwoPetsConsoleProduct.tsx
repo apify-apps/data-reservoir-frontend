@@ -40,7 +40,11 @@ export default function TwoPetsConsoleProduct() {
     }),
     colHelper.accessor('name', {
       cell: p => p.getValue(),
-      header: "Name"
+      header: "Name",
+      filterFn: 'includesString',
+      meta: {
+        filterVariant: 'search'
+      }
     }),
     colHelper.accessor('price', {
       cell: p => `${SIMOLEON_ICON}${p.getValue()}`,

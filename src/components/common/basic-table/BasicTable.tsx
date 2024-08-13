@@ -3,6 +3,7 @@ import { Column, ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, get
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { BiCheck } from 'react-icons/bi';
 import classNames from 'classnames';
+import { TextInput } from 'flowbite-react';
 
 export interface BasicTableProps<T> {
   data: T[],
@@ -38,78 +39,81 @@ export default function BasicTable<T>(props : BasicTableProps<T>) {
     getExpandedRowModel: getExpandedRowModel()
   });
 
-  console.log("Expand", !!props.expandElement);
   return (
-    <table className='relative min-h-96 rounded-md overflow-hidden min-w-full'>
-      <thead className='sticky top-0 bg-bluish-200'>
-        {
-          reactTable.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {
-                headerGroup.headers.map(header => {
-                  let sortSymbol =
-                    !header.column.getIsSorted() ? '⏸' : 
-                      header.column.getIsSorted() === 'asc' ? '🔼' : '🔽';
-                  
-                  const v = header.column.columnDef.meta?.filterVariant
-                  const hasFilter = header.column.getCanFilter() && !!v;
-                  return (
-                    <th key={header.id} className='p-2'>
-                      <div className={classNames('flex flex-col gap-2', {
-                        'min-w-32': hasFilter
-                      })}>
-                        <div className='flex justify-center gap-2'>
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          {
-                            header.column.columnDef.enableSorting && (
-                              <div title='Hold shift while clicking for multisort' className='cursor-pointer hover:bg-slate-700 rounded-sm content-center' onClick={header.column.getToggleSortingHandler()}>
-                                {sortSymbol}
-                              </div>
-                            )
-                          }
-                        </div>
-                        <div>
-                          {(v === 'select' && hasFilter) && <BasicTableFilter column={header.column}/>}
-                        </div>
-                      </div>
-                    </th>
-                  )
-                })
-              }
-            </tr>
-          ))
-        }
-      </thead>
-      <tbody>
-        {
-          reactTable.getRowModel().rows.map(row => (
-            <Fragment key={row.id}>
-              <tr>
+    <div className='rounded-md relative'>
+      <table className='min-h-96 rounded-md min-w-full'>
+        <thead className='sticky top-0 bg-bluish-200'>
+          {
+            reactTable.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
                 {
-                  row.getVisibleCells().map(cell => (
-                    <td key={cell.id} className='px-2 py-2'>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  ))
+                  headerGroup.headers.map(header => {
+                    let sortSymbol =
+                      !header.column.getIsSorted() ? '⏸' : 
+                        header.column.getIsSorted() === 'asc' ? '🔼' : '🔽';
+                    
+                    const v = header.column.columnDef.meta?.filterVariant
+                    const hasFilter = header.column.getCanFilter() && !!v;
+                    return (
+                      <th key={header.id} className='p-2'>
+                        <div className={classNames('flex flex-col', {
+                          'min-w-32 gap-2': hasFilter
+                        })}>
+                          <div className='flex justify-center gap-2'>
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {
+                              header.column.columnDef.enableSorting && (
+                                <div title='Hold shift while clicking for multisort' className='cursor-pointer hover:bg-slate-700 rounded-sm content-center' onClick={header.column.getToggleSortingHandler()}>
+                                  {sortSymbol}
+                                </div>
+                              )
+                            }
+                          </div>
+                          <div>
+                            {(hasFilter) && <BasicTableFilter column={header.column}/>}
+                          </div>
+                        </div>
+                      </th>
+                    )
+                  })
                 }
               </tr>
-              {
-                ((!!props.expandElement && row.getIsExpanded()) && (
-                  <tr>
-                    <td colSpan={row.getVisibleCells().length}>
-                      <div>
-                        {props.expandElement(row)}
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              }
-            </Fragment>
-            
-          ))
-        }
-      </tbody>
-    </table>
+            ))
+          }
+        </thead>
+        <tbody>
+          {
+            reactTable.getRowModel().rows.map(row => (
+              <Fragment key={row.id}>
+                <tr>
+                  {
+                    row.getVisibleCells().map(cell => (
+                      <td key={cell.id} className={classNames('px-2 py-2', {
+                        'text-center': (typeof cell.getValue() === 'number')
+                      })}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))
+                  }
+                </tr>
+                {
+                  ((!!props.expandElement && row.getIsExpanded()) && (
+                    <tr>
+                      <td colSpan={row.getVisibleCells().length}>
+                        <div>
+                          {props.expandElement(row)}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                }
+              </Fragment>
+              
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
   )
 }
 
@@ -117,14 +121,15 @@ interface BasicTableFilterProps<T> {
   column: Column<T, any>
 }
 
-function BasicTableFilter<T>(props: BasicTableFilterProps<T>) {
+function BasicTableFilterSelect<T>(props: BasicTableFilterProps<T>)
+{
+  // Ambil value unique dari 1 col ini
   const uniq = props.column.getFacetedUniqueValues();
+
+  // Ambil value yang sekarang dipilih
   const pickedValues = props.column.getFilterValue() ? props.column.getFilterValue() as (string | number)[] : [];
 
-  console.log(props.column);
-  console.log((pickedValues));
-  console.log(props.column.getFilterValue());
-
+  // Memoize biar bisa dirender
   const uniqueValues = useMemo(() => {
     return Array.from<string | number>(uniq.keys()).sort((a, b) => a > b ? 1 : a < b ? -1 : 0)
   }, [uniq]);
@@ -134,7 +139,7 @@ function BasicTableFilter<T>(props: BasicTableFilterProps<T>) {
   return (
     <Listbox value={pickedValues} multiple onChange={e => props.column.setFilterValue(e)}>
       <div className='relative'>
-        <ListboxButton className='text-sm font-normal bg-gray-700 rounded-sm w-full'>{pickedValues.length} Selected</ListboxButton>
+        <ListboxButton className='text-sm font-normal bg-gray-700 rounded-sm w-full py-1 px-2 data-[open]:ring-2 data-[open]:ring-cyan-700'>{pickedValues.length} Selected</ListboxButton>
         <ListboxOptions className={'z-50 absolute bottom-auto bg-bluish w-full rounded-md max-h-40 overflow-y-scroll scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600'}>
           {
             uniqueValues.map(x => (
@@ -154,5 +159,27 @@ function BasicTableFilter<T>(props: BasicTableFilterProps<T>) {
       </div>
     </Listbox>
   )
+}
 
+function BasicTableFilterSearch<T>(props: BasicTableFilterProps<T>) {
+
+  // Ambil value searchnya
+  const inputedQuery = props.column.getFilterValue() ? props.column.getFilterValue() as string : "";
+
+  return (
+    <div>
+      <input
+        className='text-xs font-normal bg-gray-700 rounded-sm w-full outline-none py-1 px-2 focus:ring-2 focus:ring-cyan-700'
+        value={inputedQuery}
+        onChange={e => {props.column.setFilterValue(e.target.value)}}
+      />
+    </div>
+  )
+}
+
+function BasicTableFilter<T>(props: BasicTableFilterProps<T>) {
+  const filterVariant = props.column.columnDef.meta?.filterVariant;
+  if (filterVariant === 'select') return (<BasicTableFilterSelect {...props}/>)
+  else if (filterVariant === 'search') return (<BasicTableFilterSearch {...props}/>)
+  else return (<></>)
 }

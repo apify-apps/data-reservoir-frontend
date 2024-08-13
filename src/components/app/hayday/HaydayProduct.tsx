@@ -54,6 +54,10 @@ export default function HaydayProduct() {
       cell: p => p.getValue(),
       header: "Name",
       enableSorting: true,
+      filterFn: 'includesString',
+      meta: {
+        filterVariant: 'search'
+      }
     }),
     colHelper.accessor('category', {
       cell: p => p.getValue(),
@@ -159,43 +163,51 @@ function ExpandMe(props : ExpandMeProps) {
               <>
                 <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700"/>
                 <div className='flex justify-between'>
-                  <div title='Ingredient'>
-                    { ((data.ingredient.length) > 0) && <h3 className='font-bold mb-4'>Ingredient</h3> }
-                    {
-                      data.ingredient.map(ing => (
-                        <div className='flex items-center gap-3' key={ing.name} title={ing.name}>
-                          <img src={ing.image} alt={ing.name} className='w-8 h-8' />
-                          <div className='flex gap-2'>
-                            <span className='font-bold'>{ing.name}</span>
-                            <span>{ing.quantity}</span>
-                          </div>
-                        </div>
-                      ))
-                    }
-                  </div>
-                  <div>
-                    {(data.producer) && (
-                      <>
-                        <h3 className='font-bold mb-4'>Made with</h3>
-                        <div className='flex items-center gap-3' key={data.producer?.name} title={data.producer?.name}>
-                          <img src={data.producer?.image} alt={data.producer?.name} className='w-32 h-32' />
-                        </div>
-                      </>
-                    )}
-                  </div>
+                  {
+                    ((data.ingredient.length) > 0) && (
+                      <div>
+                        <h3 className='font-bold mb-4'>Ingredient</h3>
+                        {
+                          data.ingredient.map(ing => (
+                            <div className='flex items-center gap-3' key={ing.name} title={ing.name}>
+                              <img src={ing.image} alt={ing.name} className='w-8 h-8' />
+                              <div className='flex gap-2'>
+                                <span className='font-bold'>{ing.name}</span>
+                                <span>{ing.quantity}</span>
+                              </div>
+                            </div>
+                          ))
+                        }
+                      </div>
+                    )
+                  }
+                  {(data.producer) && (
+                    <div>
+                      <h3 className='font-bold mb-4'>Made with</h3>
+                      <div className='flex items-center gap-3' key={data.producer?.name} title={data.producer?.name}>
+                        <img src={data.producer?.image} alt={data.producer?.name} className='w-32 h-32' />
+                      </div>
+                    </div>
+                  )}
+                  {
+                    data.usedBy.length > 0 &&(
+                      <div>
+                        <h3 className='font-bold mb-4'>Used By</h3> 
+                        {
+                          data.usedBy.map(used => (
+                            <div className='flex items-center gap-3' key={used.name} title={used.name}>
+                              <img src={used.image} alt={used.name} className='w-8 h-8' />
+                              <div className='flex gap-2'>
+                                <span className='font-bold'>{used.name}</span>
+                                <span>{used.quantity}</span>
+                              </div>
+                            </div>
+                          ))
+                        }
+                      </div>
+                    )
+                  }
                   <div title='Used by'>
-                    { ((data.usedBy.length) > 0) && <h3 className='font-bold mb-4'>Used By</h3> }
-                    {
-                      data.usedBy.map(used => (
-                        <div className='flex items-center gap-3' key={used.name} title={used.name}>
-                          <img src={used.image} alt={used.name} className='w-8 h-8' />
-                          <div className='flex gap-2'>
-                            <span className='font-bold'>{used.name}</span>
-                            <span>{used.quantity}</span>
-                          </div>
-                        </div>
-                      ))
-                    }
                   </div>
                 </div>
               </>

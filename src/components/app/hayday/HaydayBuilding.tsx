@@ -6,14 +6,13 @@ import { API_ROUTE } from '@/constant/api-route';
 import { request } from '@/utilities/http';
 import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper, Row } from '@tanstack/react-table';
-import { Checkbox } from 'flowbite-react';
-import { getStaticIndex, multiSelectFilter } from '@/utilities/table';
-import { HayDayBuildingDetailResponse, HayDayBuildingResponse, HayDayProductDetailResponse, HayDayProductResponse } from '@/model/response/hayday';
+import { getStaticIndex } from '@/utilities/table';
+import { HayDayBuildingDetailResponse, HayDayBuildingResponse } from '@/model/response/hayday';
 import { secondToTimespan } from '@/utilities/general';
 
 export default function HaydayBuilding() {
   const { isLoading, data } = useQuery({
-    queryKey: ["hayday-product"],
+    queryKey: ["hayday-building"],
     queryFn: async () => {
       let j = await request < HayDayBuildingResponse[], {}>({
         method: "GET",
@@ -54,6 +53,10 @@ export default function HaydayBuilding() {
       cell: p => p.getValue(),
       header: "Name",
       enableSorting: true,
+      filterFn: 'includesString',
+      meta: {
+        filterVariant: 'search'
+      }
     }),
     colHelper.accessor('price', {
       cell: p => p.getValue(),

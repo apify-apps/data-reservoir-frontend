@@ -40,7 +40,11 @@ export default function CastawayProduct() {
     }),
     colHelper.accessor('name', {
       cell: p => p.getValue(),
-      header: "Name"
+      header: "Name",
+      filterFn: 'includesString',
+      meta: {
+        filterVariant: 'search'
+      }
     }),
     colHelper.accessor('category', {
       cell: p => p.getValue(),
