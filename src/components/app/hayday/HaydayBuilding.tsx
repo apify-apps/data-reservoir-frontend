@@ -14,7 +14,7 @@ export default function HaydayBuilding() {
   const { isLoading, data } = useQuery({
     queryKey: ["hayday-building"],
     queryFn: async () => {
-      let j = await request < HayDayBuildingResponse[], {}>({
+      let j = await request <HayDayBuildingResponse[], {}>({
         method: "GET",
         url: API_ROUTE.HAY_DAY.BUILDING,
       });
@@ -33,7 +33,7 @@ export default function HaydayBuilding() {
           🔴
         </div>)
       },
-      cell: (p) => !p.row.getCanExpand() ? '☹' :  (<div className='cursor-pointer' onClick={p.row.getToggleExpandedHandler()}>{ p.row.getIsExpanded() ? '👇' : '👉' }</div>),
+      cell: (p) => !p.row.getCanExpand() ? '❌' :  (<div className='cursor-pointer' onClick={p.row.getToggleExpandedHandler()}>{ p.row.getIsExpanded() ? '👇' : '👉' }</div>),
     }),
     colHelper.display({
       id: 'index',

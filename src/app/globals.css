@@ -78,3 +78,7 @@
         }
     }
 }
+
+.scrollbar-default {
+    @apply scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600
+}
