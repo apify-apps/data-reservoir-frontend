@@ -11,7 +11,7 @@ import PizzaFrenzyTable from "./PizzaFrenzyTable";
 
 export default function PizzaFrenzyClientPage() {
   let { isLoading, data: summaryData } = useQuery({
-    queryKey: [""],
+    queryKey: ["pizza-frenzy-topping"],
     queryFn: async () => {
       let j = await request<DashboardResponse[], DashboardRequest>({
         method: "GET",
