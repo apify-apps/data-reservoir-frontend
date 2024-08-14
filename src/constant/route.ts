@@ -56,8 +56,7 @@ export const ROUTES: ROUTE_TYPE[] = [
     id: 'pizza-frenzy',
     name: 'Pizza Frenzy',
     icon: FaPizzaSlice,
-    link: '/pizza-frenzy',
-    inactive: true
+    link: '/pizza-frenzy'
   },
   {
     id: 'nasi-goreng',

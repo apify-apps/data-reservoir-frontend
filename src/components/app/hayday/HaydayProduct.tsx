@@ -34,7 +34,7 @@ export default function HaydayProduct() {
           🔴
         </div>)
       },
-      cell: (p) => !p.row.getCanExpand() ? '☹' :  (<div className='cursor-pointer' onClick={p.row.getToggleExpandedHandler()}>{ p.row.getIsExpanded() ? '👇' : '👉' }</div>),
+      cell: (p) => !p.row.getCanExpand() ? '❌' :  (<div className='cursor-pointer' onClick={p.row.getToggleExpandedHandler()}>{ p.row.getIsExpanded() ? '👇' : '👉' }</div>),
     }),
     colHelper.display({
       id: 'index',

@@ -23,7 +23,8 @@ export const API_SHORTHAND = Object.freeze({
     TWO_PRODUCT: 'two-product',
     TWO_PIZZA_PRODUCT: 'two-pizza-product',
     THREE_PRODUCT: 'three-product',
-  }
+  },
+  PIZZA_FRENZY: ''
 } as const)
 /**
  * Untuk link fetching
@@ -47,5 +48,6 @@ export const API_ROUTE = Object.freeze({
     TWO_PRODUCT: `${HOST}/farm-frenzy/${API_SHORTHAND.FARM_FRENZY.TWO_PRODUCT}`,
     TWO_PIZZA_PRODUCT: `${HOST}/farm-frenzy/${API_SHORTHAND.FARM_FRENZY.TWO_PIZZA_PRODUCT}`,
     THREE_PRODUCT: `${HOST}/farm-frenzy/${API_SHORTHAND.FARM_FRENZY.THREE_PRODUCT}`,
-  }
+  },
+  PIZZA_FRENZY: `${HOST}/pizza-frenzy/`,
 } as const)

@@ -41,8 +41,8 @@ export default function BasicTable<T>(props : BasicTableProps<T>) {
 
   return (
     <div className='rounded-md relative'>
-      <table className='min-h-96 rounded-md min-w-full'>
-        <thead className='sticky top-0 bg-bluish-200'>
+      <table className='min-h-96 rounded-md min-w-full border-2 border-slate-700'>
+        <thead className='sticky top-0 bg-bluish-200 z-50'>
           {
             reactTable.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
@@ -140,7 +140,7 @@ function BasicTableFilterSelect<T>(props: BasicTableFilterProps<T>)
     <Listbox value={pickedValues} multiple onChange={e => props.column.setFilterValue(e)}>
       <div className='relative'>
         <ListboxButton className='text-sm font-normal bg-gray-700 rounded-sm w-full py-1 px-2 data-[open]:ring-2 data-[open]:ring-cyan-700'>{pickedValues.length} Selected</ListboxButton>
-        <ListboxOptions className={'z-50 absolute bottom-auto bg-bluish w-full rounded-md max-h-40 overflow-y-scroll scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600'}>
+        <ListboxOptions className={'z-50 absolute bottom-auto bg-bluish w-full rounded-md max-h-40 overflow-y-scroll scrollbar-default'}>
           {
             uniqueValues.map(x => (
               <ListboxOption className='px-2 py-1 text-left cursor-pointer' value={x} key={x}>
