@@ -13,7 +13,7 @@ import { PIZZA_FRENZY_TOPPING_UPGRADE } from '@/constant/enums';
 
 export default function PizzaFrenzyTable() {
   const { isLoading, data } = useQuery({
-    queryKey: ["hayday-building"],
+    queryKey: ["pizza-frenzy"],
     queryFn: async () => {
       let j = await request <PizzaFrenzyToppingResponse[], {}>({
         method: "GET",
