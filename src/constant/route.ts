@@ -62,8 +62,7 @@ export const ROUTES: ROUTE_TYPE[] = [
     id: 'nasi-goreng',
     name: 'Nasi Goreng',
     icon: FaBowlFood,
-    link: '/nasi-goreng',
-    inactive: true
+    link: '/nasi-goreng'
   },
   {
     id: 'docs',

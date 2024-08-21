@@ -169,7 +169,7 @@ function BasicTableFilterSearch<T>(props: BasicTableFilterProps<T>) {
   return (
     <div>
       <input
-        className='text-xs font-normal bg-gray-700 rounded-sm w-full outline-none py-1 px-2 focus:ring-2 focus:ring-cyan-700'
+        className='text-sm font-normal bg-gray-700 rounded-sm w-full outline-none py-1 px-2 focus:ring-2 focus:ring-cyan-700'
         value={inputedQuery}
         onChange={e => {props.column.setFilterValue(e.target.value)}}
       />
