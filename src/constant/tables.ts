@@ -31,8 +31,19 @@ export type FarmFrenzyTableType =
   "farm_frenzy_three_product";
 
 export const FarmFrenzyTableLabel: {[key in FarmFrenzyTableType]: string } = {
-  "farm_frenzy_one_product": "Farm Frenzy One Product",
-  "farm_frenzy_two_product": "Farm Frenzy Two Product",
-  "farm_frenzy_two_pizza_product": "Farm Frenzy Two Pizza Product",
-  "farm_frenzy_three_product": "Farm Frenzy Three Product"
+  "farm_frenzy_one_product": "One Product",
+  "farm_frenzy_two_product": "Two Product",
+  "farm_frenzy_two_pizza_product": "Two Pizza Product",
+  "farm_frenzy_three_product": "Three Product"
+}
+
+export type NasiGorengTableType =
+  "nasi_goreng_burned_food" |
+  "nasi_goreng_plate" |
+  "nasi_goreng_ingredient"
+
+export const NasiGorengTableLabel: {[key in NasiGorengTableType]: string} = {
+  'nasi_goreng_burned_food': 'Burned Food',
+  'nasi_goreng_ingredient': 'Ingredient',
+  'nasi_goreng_plate': 'Plate'
 }

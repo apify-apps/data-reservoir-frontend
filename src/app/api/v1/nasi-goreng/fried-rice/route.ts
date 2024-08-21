@@ -1,4 +1,4 @@
-import { eq, inArray } from 'drizzle-orm';
+import { inArray } from 'drizzle-orm';
 import { DB } from "@/database/client";
 import { nasiGorengFriedRice, nasiGorengFriedRiceLevel } from "@/database/schema";
 import { newResponse } from "@/utilities/api";
